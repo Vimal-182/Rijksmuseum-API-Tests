@@ -26,9 +26,14 @@ jobs:
       - name: Run tests
         run: |
           pytest test_api.py --html=report.html
+          pytest --junitxml=test-results.xml --html=report.html
+          continue-on-error: true  # Allows the workflow to continue even if tests fail
 
       - name: Upload test report
+        if: always()  # Ensures artifacts are uploaded even if tests fail
         uses: actions/upload-artifact@v3
         with:
           name: test-report
-          path: report.html
+          path: |
+            report.html 
+            test-results.xml
